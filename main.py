@@ -1,4 +1,4 @@
-
+import requests
 from fastapi import FastAPI
 
 
@@ -15,7 +15,17 @@ productList: list[ProductSchema] = [
     ProductSchema(id=3, title="Coca Cola", price=9.99, description="Best drink in the world after beer", category="Beverage", image="coca.jpg", rating=ratingList[2]),
 ]
 app = FastAPI(title="My Second API")
-@app.get("/products")
+@app.get("/products", response_model=list[ProductSchema])
 def get_products() -> list[ProductSchema]:
-    return productList
+    result = requests.get("https://fakestoreapi.com/products")
+    response_json = result.json()
+
+    products: list[ProductSchema] = []
+
+    for item in response_json:
+        product = ProductSchema(**item)
+        products.append(product)
+
+    return list(products)
+
 
