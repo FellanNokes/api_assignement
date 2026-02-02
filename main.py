@@ -1,6 +1,5 @@
 import requests
-from fastapi import FastAPI
-
+from fastapi import FastAPI, HTTPException
 
 from schema.product import ProductSchema
 from schema.rating import RatingSchema
@@ -31,6 +30,9 @@ def get_products() -> list[ProductSchema]:
 @app.get("/products/{id}", response_model=ProductSchema)
 def get_product(id: int) -> ProductSchema:
     products = get_products()
-    return products[id]
+    if len(products) >= id > 0:
+        return products[id-1]
+    else:
+        raise HTTPException(status_code=404, detail="Product not found")
 
 
