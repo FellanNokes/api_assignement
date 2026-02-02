@@ -28,4 +28,9 @@ def get_products() -> list[ProductSchema]:
 
     return list(products)
 
+@app.get("/products/{id}", response_model=ProductSchema)
+def get_product(id: int) -> ProductSchema:
+    products = get_products()
+    return products[id]
+
 
